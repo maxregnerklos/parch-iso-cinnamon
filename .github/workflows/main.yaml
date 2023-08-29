@@ -1,8 +1,6 @@
 name: Build mROS Cooler UI ISO
-on:
-  release:
-    types:
-      - created
+
+on: {}
 
 env:
   api_key: ${{ secrets.GITHUB_TOKEN }}
