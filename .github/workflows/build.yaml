@@ -1,5 +1,5 @@
 # This workflow will build an Arch Linux ISO file with the commit on it
-name: build parchiso per release
+name: build mros per release
 on:
   release:
     types:
@@ -9,20 +9,29 @@ env:
   api_key: ${{ secrets.GITHUB_TOKEN }}
   name: ${{ github.event.repository.name }}
   release_name: ${{ github.ref_name }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
       options: --privileged
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Install Packages via Pacman
-        run: pacman -Sy; pacman --noconfirm -S git archiso python python-pygithub reflector
+        run: |
+          pacman -Sy
+          pacman --noconfirm -S git archiso python python-pygithub reflector
+          pacman --noconfirm -S linux-latest=6.1
+          pacman --noconfirm -S xfce4 gnome kde plasma
+
       - name: Change Arch docker mirror
         run: reflector -c "US" -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist
+
       - name: Build image
         run: mkarchiso -v iso/
+
       - name: Upload iso to the release
         run: python tools/upload_asset.py
-
