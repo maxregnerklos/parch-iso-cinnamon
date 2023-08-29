@@ -1,7 +1,5 @@
 name: Build mROS Cooler UI ISO
 
-on: {}
-
 env:
   api_key: ${{ secrets.GITHUB_TOKEN }}
   name: ${{ github.event.repository.name }}
